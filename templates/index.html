@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SIP Calculator</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <div class="logo-container">
+                    <i class="fas fa-coins"></i>
+                    <i class="fas fa-chart-line"></i>
+                    <span class="logo-text">SIP<span class="text-warning">Pro</span></span>
+                </div>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#"><i class="fas fa-calculator"></i> SIP Calculator</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/mutual-funds"><i class="fas fa-chart-line"></i> Top 10 Mutual Funds</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/sip-vs-lumpsum"><i class="fas fa-balance-scale"></i> SIP vs Lumpsum</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/sip-vs-swp"><i class="fas fa-exchange-alt"></i> SIP vs SWP</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h2 class="card-title">
+                            <i class="fas fa-calculator text-primary"></i>
+                            SIP Calculator
+                        </h2>
+                        <form id="sipForm">
+                            <div class="mb-3">
+                                <label for="monthlyInvestment" class="form-label">Monthly Investment (₹)</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-rupee-sign"></i></span>
+                                    <input type="number" class="form-control" id="monthlyInvestment" 
+                                           placeholder="e.g., 5000" required min="500" step="500">
+                                </div>
+                                <small class="text-muted">Minimum investment: ₹500</small>
+                            </div>
+                            <div class="mb-3">
+                                <label for="years" class="form-label">Investment Period (Years)</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
+                                    <input type="number" class="form-control" id="years" 
+                                           placeholder="e.g., 5" required min="1" max="40">
+                                </div>
+                                <small class="text-muted">Range: 1-40 years</small>
+                            </div>
+                            <div class="mb-3">
+                                <label for="expectedReturn" class="form-label">Expected Annual Returns (%)</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-percentage"></i></span>
+                                    <input type="number" class="form-control" id="expectedReturn" 
+                                           placeholder="e.g., 12" required min="1" max="30" step="0.1">
+                                </div>
+                                <small class="text-muted">Range: 1-30%</small>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Adjust for Inflation</label>
+                                <div class="inflation-toggle">
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" id="inflationToggle">
+                                        <label class="form-check-label" for="inflationToggle">Enable inflation adjustment</label>
+                                    </div>
+                                    <div class="inflation-rate mt-2" style="display: none;">
+                                        <div class="input-group">
+                                            <span class="input-group-text"><i class="fas fa-percentage"></i></span>
+                                            <input type="number" class="form-control" id="inflationRate" 
+                                                   placeholder="e.g., 6" min="0" max="15" step="0.1" value="6">
+                                        </div>
+                                        <small class="text-muted">Default inflation rate: 6%</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-calculator"></i> Calculate Returns
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h3><i class="fas fa-chart-pie text-primary"></i> Results</h3>
+                        <div class="results-container">
+                            <div class="result-item">
+                                <h4><i class="fas fa-rupee-sign"></i> Future Value</h4>
+                                <p id="futureValue">₹0</p>
+                            </div>
+                            <div class="result-item">
+                                <h4><i class="fas fa-rupee-sign"></i> Total Investment</h4>
+                                <p id="totalInvestment">₹0</p>
+                            </div>
+                            <div class="result-item">
+                                <h4><i class="fas fa-rupee-sign"></i> Wealth Gained</h4>
+                                <p id="wealthGained">₹0</p>
+                            </div>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="pieChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer mt-5 py-4 bg-dark text-light">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 mb-4 mb-md-0">
+                    <h5 class="text-warning mb-3">SIPPro</h5>
+                    <p class="text-muted">Your trusted partner for financial planning and investment calculations. Make informed decisions with our easy-to-use SIP calculator and investment tools.</p>
+                    <div class="social-links mt-3">
+                        <a href="#" class="text-light me-3"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="text-light me-3"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="text-light me-3"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#" class="text-light"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+                <div class="col-md-2 mb-4 mb-md-0">
+                    <h6 class="text-warning mb-3">Quick Links</h6>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="/" class="text-muted text-decoration-none">Home</a></li>
+                        <li class="mb-2"><a href="/mutual-funds" class="text-muted text-decoration-none">Mutual Funds</a></li>
+                        <li class="mb-2"><a href="/sip-vs-lumpsum" class="text-muted text-decoration-none">SIP vs Lumpsum</a></li>
+                        <li class="mb-2"><a href="/sip-vs-swp" class="text-muted text-decoration-none">SIP vs SWP</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-3 mb-4 mb-md-0">
+                    <h6 class="text-warning mb-3">Investment Tools</h6>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="#" class="text-muted text-decoration-none">SIP Calculator</a></li>
+                        <li class="mb-2"><a href="#" class="text-muted text-decoration-none">Lumpsum Calculator</a></li>
+                        <li class="mb-2"><a href="#" class="text-muted text-decoration-none">SWP Calculator</a></li>
+                        <li class="mb-2"><a href="#" class="text-muted text-decoration-none">Tax Calculator</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-3">
+                    <h6 class="text-warning mb-3">Contact Us</h6>
+                    <ul class="list-unstyled text-muted">
+                        <li class="mb-2"><i class="fas fa-envelope me-2"></i> support@sippro.com</li>
+                        <li class="mb-2"><i class="fas fa-phone me-2"></i> +91 1234567890</li>
+                        <li class="mb-2"><i class="fas fa-map-marker-alt me-2"></i> Mumbai, India</li>
+                    </ul>
+                </div>
+            </div>
+            <hr class="mt-4 mb-4 border-secondary">
+            <div class="row">
+                <div class="col-md-6 text-center text-md-start">
+                    <p class="text-muted mb-0">&copy; 2024 SIPPro. All rights reserved.</p>
+                </div>
+                <div class="col-md-6 text-center text-md-end">
+                    <a href="#" class="text-muted text-decoration-none me-3">Privacy Policy</a>
+                    <a href="#" class="text-muted text-decoration-none me-3">Terms of Service</a>
+                    <a href="#" class="text-muted text-decoration-none">Disclaimer</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html> 

@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SIP vs SWP - SIP Calculator</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <div class="logo-container">
+                    <i class="fas fa-coins"></i>
+                    <i class="fas fa-chart-line"></i>
+                    <span class="logo-text">SIP<span class="text-warning">Pro</span></span>
+                </div>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/"><i class="fas fa-calculator"></i> SIP Calculator</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/mutual-funds"><i class="fas fa-chart-line"></i> Top 10 Mutual Funds</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/sip-vs-lumpsum"><i class="fas fa-balance-scale"></i> SIP vs Lumpsum</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/sip-vs-swp"><i class="fas fa-exchange-alt"></i> SIP vs SWP</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h2 class="card-title">
+                            <i class="fas fa-exchange-alt text-primary"></i>
+                            SIP vs SWP Comparison
+                        </h2>
+                        <div class="comparison-content">
+                            <h4>What is SIP?</h4>
+                            <p>Systematic Investment Plan (SIP) is a method of investing a fixed amount regularly in mutual funds. Benefits include:</p>
+                            <ul>
+                                <li>Regular investment discipline</li>
+                                <li>Rupee cost averaging</li>
+                                <li>Long-term wealth creation</li>
+                                <li>Power of compounding</li>
+                            </ul>
+
+                            <h4>What is SWP?</h4>
+                            <p>Systematic Withdrawal Plan (SWP) is a method of withdrawing a fixed amount regularly from mutual funds. It's useful for:</p>
+                            <ul>
+                                <li>Regular income generation</li>
+                                <li>Retirement planning</li>
+                                <li>Tax-efficient withdrawals</li>
+                                <li>Maintaining investment corpus</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h3>Comparison Chart</h3>
+                        <div class="chart-container">
+                            <canvas id="comparisonChart"></canvas>
+                        </div>
+                        <div class="comparison-table mt-4">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Feature</th>
+                                        <th>SIP</th>
+                                        <th>SWP</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Purpose</td>
+                                        <td>Investment</td>
+                                        <td>Withdrawal</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Cash Flow</td>
+                                        <td>Outflow</td>
+                                        <td>Inflow</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Best For</td>
+                                        <td>Wealth Creation</td>
+                                        <td>Income Generation</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Tax Implications</td>
+                                        <td>Growth Tax</td>
+                                        <td>Income Tax</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const ctx = document.getElementById('comparisonChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'radar',
+            data: {
+                labels: ['Wealth Creation', 'Income Generation', 'Tax Efficiency', 'Flexibility', 'Risk Management'],
+                datasets: [{
+                    label: 'SIP',
+                    data: [9, 3, 7, 8, 8],
+                    backgroundColor: 'rgba(13, 110, 253, 0.2)',
+                    borderColor: '#0d6efd',
+                    pointBackgroundColor: '#0d6efd'
+                }, {
+                    label: 'SWP',
+                    data: [4, 9, 8, 7, 6],
+                    backgroundColor: 'rgba(25, 135, 84, 0.2)',
+                    borderColor: '#198754',
+                    pointBackgroundColor: '#198754'
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    r: {
+                        beginAtZero: true,
+                        max: 10
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html> 
